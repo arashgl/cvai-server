@@ -9,6 +9,9 @@ import {
 import { CoverLetterService } from './cover-letter.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
+import { User } from '@lib/shared';
+import { GetUser } from 'src/auth/decorators/user.decorator';
+
 @Controller('cover-letter')
 export class CoverLetterController {
   constructor(private readonly coverLetterService: CoverLetterService) {}
@@ -19,6 +22,7 @@ export class CoverLetterController {
     @UploadedFile() file: Express.Multer.File,
     @Body('jobDescription') jobDescription: string,
     @Res() response: Response,
+    @GetUser() user: User,
   ) {
     // return this.coverLetterService.generateCoverLetterStream(
     //   file,
@@ -34,6 +38,7 @@ export class CoverLetterController {
       const stream = await this.coverLetterService.generateCoverLetterStream(
         file,
         jobDescription,
+        user,
       );
 
       // Handle stream using for...await

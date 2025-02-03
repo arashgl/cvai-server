@@ -8,6 +8,8 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AnalyzeService } from './analyze.service';
 import { CompareDto } from './dto/analyze.dto';
+import { GetUser } from 'src/auth/decorators/user.decorator';
+import { User } from '@lib/shared';
 
 @Controller('analyze')
 export class AnalyzeController {
@@ -21,8 +23,11 @@ export class AnalyzeController {
       },
     }),
   )
-  async analyze(@UploadedFile() file: Express.Multer.File) {
-    return this.analyzeService.create(file);
+  async analyze(
+    @UploadedFile() file: Express.Multer.File,
+    @GetUser() user: User,
+  ) {
+    return this.analyzeService.create(file, user);
   }
 
   @Post('compare')
@@ -36,7 +41,8 @@ export class AnalyzeController {
   async compare(
     @UploadedFile() file: Express.Multer.File,
     @Body() body: CompareDto,
+    @GetUser() user: User,
   ) {
-    return this.analyzeService.compare(file, body);
+    return this.analyzeService.compare(file, body, user);
   }
 }

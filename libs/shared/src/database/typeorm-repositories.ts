@@ -1,3 +1,3 @@
-import { User } from './entities';
+import { User, Resume } from './entities';
 
-export const TypeOrmRepositories = [User];
+export const TypeOrmRepositories = [User, Resume];

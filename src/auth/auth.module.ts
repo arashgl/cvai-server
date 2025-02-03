@@ -1,29 +1,29 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtStrategy } from './strategies/jwt.strategy';
-import { AuthService } from './services/auth.service';
-import { JwtServiceFactory } from './services/jwt.factory';
-import { AuthController } from './auth.controller';
 import { PassportModule } from '@nestjs/passport';
-import { CacheModule } from '@nestjs/cache-manager';
-import { NotificationModule } from '@server/notification/notification.module';
-import { EmailModule } from '@server/email/email.module';
-import { GoogleAuthService } from '@server/auth/services/google-auth.service';
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
+import { JwtStrategy } from './strategies/jwt.strategy';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { DatabaseModule } from '@lib/shared/database/database.module';
-import { UserModule } from '@server/user/user.module';
 
 @Module({
   imports: [
-    PassportModule,
     DatabaseModule,
-    UserModule,
-    JwtModule.registerAsync({ useClass: JwtServiceFactory }),
-    NotificationModule,
-    CacheModule.register({ ttl: 600_000 }),
-    EmailModule,
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get('JWT_SECRET'),
+        signOptions: {
+          expiresIn: configService.get('JWT_EXPIRATION'),
+        },
+      }),
+      inject: [ConfigService],
+    }),
   ],
-  providers: [AuthService, JwtStrategy, GoogleAuthService],
-  exports: [AuthService, JwtModule],
   controllers: [AuthController],
+  providers: [AuthService, JwtStrategy],
+  exports: [JwtStrategy, PassportModule],
 })
 export class AuthModule {}

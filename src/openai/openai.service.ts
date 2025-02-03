@@ -75,7 +75,10 @@ export class OpenAIService {
           },
         ],
       });
-      return JSON.parse(response.choices[0].message.content || '{}');
+      return {
+        result: JSON.parse(response.choices[0].message.content || '{}'),
+        jobDescription,
+      };
     } catch (error) {
       throw new Error(`OpenAI API error: ${error.message}`);
     }

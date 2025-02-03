@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:latest
+    container_name: resume_analyze_db
+    environment:
+      POSTGRES_USER: resume_admin
+      POSTGRES_PASSWORD: resume_secure_pass_2024
+      POSTGRES_DB: resume_analyze_db
+    ports:
+      - '5531:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

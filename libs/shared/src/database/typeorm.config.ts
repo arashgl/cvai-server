@@ -10,17 +10,16 @@ export class TypeOrmOptionsService {
       this.getTypeormOptions(),
     );
   }
-
   getTypeormOptions(): TypeOrmModuleOptions {
     return {
       type: 'postgres',
-      host: this.configService.get('POSTGRES_HOST'),
-      port: +this.configService.get('POSTGRES_PORT'),
-      username: this.configService.get('POSTGRES_USER'),
-      password: this.configService.get('POSTGRES_PASSWORD'),
-      database: this.configService.get('POSTGRES_DB'),
-      synchronize: true,
+      host: this.configService.get('DATABASE_HOST'),
+      port: +this.configService.get('DATABASE_PORT'),
+      username: this.configService.get('DATABASE_USER'),
+      password: this.configService.get('DATABASE_PASSWORD'),
+      database: this.configService.get('DATABASE_NAME'),
       entities: TypeOrmRepositories,
+      synchronize: true,
     };
   }
 }

@@ -1,17 +1,33 @@
 import { Module } from '@nestjs/common';
-import { OpenAIModule } from './openai/openai.module';
-import { AnalyzeModule } from './analyze/analyze.module';
 import { ConfigModule } from '@nestjs/config';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { OpenAIModule } from './openai/openai.module';
 import { CoverLetterModule } from './cover-letter/cover-letter.module';
-import { UtilsModule } from './utils/utils.module';
+import { AnalyzeModule } from './analyze/analyze.module';
+import { DatabaseModule } from '@lib/shared/database/database.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    DatabaseModule,
+    AuthModule,
     OpenAIModule,
-    AnalyzeModule,
     CoverLetterModule,
-    UtilsModule,
+    AnalyzeModule,
+  ],
+  controllers: [AppController],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
   ],
 })
 export class AppModule {}

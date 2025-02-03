@@ -1,9 +1,9 @@
 import {
-  IsEmail,
-  IsNotEmpty,
-  IsString,
   MaxLength,
   MinLength,
+  IsNotEmpty,
+  IsString,
+  IsEmail,
 } from 'class-validator';
 
 export class RegisterDto {
