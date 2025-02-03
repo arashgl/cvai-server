@@ -97,10 +97,9 @@ export class OpenAIService {
         type: 'text',
         text: `###{${jobDescription}}###`,
       });
-      console.log(jobDescription, 'JOB DESCRIPTION');
 
       const response = await this.openai.chat.completions.create({
-        model: 'gpt-4o-mini',
+        model: 'gpt-4o',
         temperature: 0.3,
         messages: [
           {
