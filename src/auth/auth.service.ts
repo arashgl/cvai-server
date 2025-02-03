@@ -66,4 +66,44 @@ export class AuthService {
       },
     };
   }
+
+  async validateGoogleUser(details: { email: string; googleId: string }) {
+    const user = await this.userRepository.findOne({
+      where: { email: details.email },
+    });
+
+    if (user) {
+      // Update Google ID if not set
+      if (!user.googleId) {
+        user.googleId = details.googleId;
+        await this.userRepository.save(user);
+      }
+      return user;
+    }
+
+    // Create new user if doesn't exist
+    const newUser = this.userRepository.create({
+      email: details.email,
+      googleId: details.googleId,
+      isEmailVerified: true, // Google OAuth emails are verified
+    });
+
+    await this.userRepository.save(newUser);
+    return newUser;
+  }
+
+  async googleLogin(user: User) {
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    const payload = { sub: user.id, email: user.email };
+    return {
+      token: this.jwtService.sign(payload),
+      user: {
+        id: user.id,
+        email: user.email,
+      },
+    };
+  }
 }

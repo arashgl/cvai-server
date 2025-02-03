@@ -1,4 +1,10 @@
-import { Column, Entity, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { AppBaseEntity } from './base/base.entity';
 import { RoleEnum } from '../enums/RoleEnum';
 import { Exclude } from 'class-transformer';
@@ -28,4 +34,16 @@ export class User extends AppBaseEntity {
 
   @OneToMany(() => Resume, (resume) => resume.user)
   resumes: Resume[];
+
+  @Column({ nullable: true })
+  googleId?: string;
+
+  @Column({ default: false })
+  isEmailVerified: boolean;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
