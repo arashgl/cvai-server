@@ -1,17 +1,5 @@
 version: '3.8'
 services:
-  nest-api:
-    build:
-      context: .
-      dockerfile: apps/nest-api/Dockerfile
-    env_file:
-      - .env
-    ports:
-      - '${PORT:-3000}:${PORT:-3000}'
-    depends_on:
-      - python-ocr
-      - postgres
-
   python-ocr:
     build:
       context: .
@@ -20,12 +8,17 @@ services:
       - .env
     environment:
       - PYTHONUNBUFFERED=1
+      - ENVIRONMENT=development
     ports:
       - '8000:8000'
+    volumes:
+      - ./apps/python-ocr:/app
+    command:
+      ['uvicorn', 'main:app', '--host', '0.0.0.0', '--port', '8000', '--reload']
 
   postgres:
     image: postgres:latest
-    container_name: resume_analyze_db
+    container_name: resume_analyze_db_dev
     environment:
       POSTGRES_USER: ${DB_USER:-resume_admin}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-resume_secure_pass_2024}
@@ -33,7 +26,7 @@ services:
     ports:
       - '${DB_PORT:-5531}:5432'
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data_dev:/var/lib/postgresql/data
 
 volumes:
-  postgres_data:
+  postgres_data_dev:

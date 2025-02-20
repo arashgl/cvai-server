@@ -10,7 +10,7 @@ import { CoverLetterService } from './cover-letter.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 import { User } from '@lib/shared';
-import { GetUser } from 'src/auth/decorators/user.decorator';
+import { GetUser } from '../auth/decorators/user.decorator';
 
 @Controller('cover-letter')
 export class CoverLetterController {

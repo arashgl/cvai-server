@@ -8,7 +8,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AnalyzeService } from './analyze.service';
 import { CompareDto } from './dto/analyze.dto';
-import { GetUser } from 'src/auth/decorators/user.decorator';
+import { GetUser } from '../auth/decorators/user.decorator';
 import { User } from '@lib/shared';
 
 @Controller('analyze')

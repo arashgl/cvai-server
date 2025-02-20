@@ -1,0 +1,35 @@
+FROM node:20-slim
+
+WORKDIR /app
+
+# Copy all configuration files first
+COPY package.json package-lock.json* ./
+COPY nx.json tsconfig.base.json tsconfig.json workspace.json ./
+
+# Copy shared library files
+COPY libs/shared ./libs/shared
+
+# Copy nest-api configuration files
+COPY apps/nest-api/project.json ./apps/nest-api/
+COPY apps/nest-api/tsconfig.json ./apps/nest-api/
+COPY apps/nest-api/tsconfig.app.json ./apps/nest-api/
+COPY apps/nest-api/tsconfig.spec.json ./apps/nest-api/
+COPY apps/nest-api/webpack.config.cjs ./apps/nest-api/
+
+# Install ALL dependencies (including dev dependencies)
+RUN npm install --legacy-peer-deps
+# Install nx globally
+RUN npm install -g nx
+
+# Copy the source code
+COPY apps/nest-api/src ./apps/nest-api/src
+
+# Set environment variables
+ENV NODE_ENV=development
+ENV PORT=3000
+
+# Expose the port
+EXPOSE ${PORT}
+
+# Use development command with explicit nx call
+CMD ["nx", "serve", "nest-api", "--configuration=development"]

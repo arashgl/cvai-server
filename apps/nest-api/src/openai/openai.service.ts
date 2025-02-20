@@ -12,11 +12,16 @@ import { ChatCompletionContentPartText } from 'openai/resources/chat/completions
 export class OpenAIService {
   constructor(private readonly openai: OpenAI) {}
 
-  async analyzeImage(imageBuffer: Buffer[]) {
+  async analyzeImage(resumeText: string) {
     try {
-      const formattedReq = this.formatPDFImages(imageBuffer);
+      const formattedReq = [
+        {
+          type: 'text',
+          text: `resume: ###{${resumeText}}###`,
+        },
+      ];
       const response = await this.openai.chat.completions.create({
-        model: 'gpt-4o-mini',
+        model: 'gemini-2.0-pro-exp-02-05',
         response_format: { type: 'json_object' },
         temperature: 0.3,
         messages: [
@@ -26,7 +31,7 @@ export class OpenAIService {
           },
           {
             role: 'user',
-            content: formattedReq,
+            content: formattedReq as ChatCompletionContentPartText[],
           },
         ],
       });
@@ -35,33 +40,38 @@ export class OpenAIService {
       throw new Error(`OpenAI API error: ${error.message}`);
     }
   }
-  formatPDFImages(imageBuffer: Buffer[]): Array<ChatCompletionContentPartText> {
-    const formattedReq = [];
-    for (const buffer of imageBuffer) {
-      formattedReq.push({
-        type: 'image_url',
-        image_url: {
-          url: `data:image/png;base64,${buffer.toString('base64')}`,
-        },
-      });
-    }
-    return formattedReq;
-  }
+
+  // formatPDFImages(imageBuffer: Buffer[]): Array<ChatCompletionContentPartText> {
+  //   const formattedReq = [];
+  //   for (const buffer of imageBuffer) {
+  //     formattedReq.push({
+  //       type: 'image_url',
+  //       image_url: {
+  //         url: `data:image/png;base64,${buffer.toString('base64')}`,
+  //       },
+  //     });
+  //   }
+  //   return formattedReq;
+  // }
 
   async compareResumeWithJobDescription(
-    resume: Buffer[],
+    resumeText: string,
     jobDescription: string,
   ) {
     try {
-      const formattedReq = this.formatPDFImages(resume);
-
-      formattedReq.push({
-        type: 'text',
-        text: `job description: ${jobDescription}`,
-      });
+      const formattedReq = [
+        {
+          type: 'text',
+          text: `resume: %%%{${resumeText}}%%%`,
+        },
+        {
+          type: 'text',
+          text: `job description: ###{${jobDescription}}###`,
+        },
+      ];
 
       const response = await this.openai.chat.completions.create({
-        model: 'gpt-4o-mini',
+        model: 'gemini-2.0-pro-exp-02-05',
         response_format: { type: 'json_object' },
         temperature: 0.3,
         messages: [
@@ -71,7 +81,7 @@ export class OpenAIService {
           },
           {
             role: 'user',
-            content: formattedReq,
+            content: formattedReq as ChatCompletionContentPartText[],
           },
         ],
       });
@@ -84,22 +94,25 @@ export class OpenAIService {
     }
   }
 
-  async generateCoverLetter(resumeData: Buffer[], jobDescription: string) {
+  async generateCoverLetter(resumeText: string, jobDescription: string) {
     try {
-      const formattedReq = this.formatPDFImages(resumeData);
-
-      formattedReq.push({
-        type: 'text',
-        text: GENERATE_COVER_LETTER_USER_PROMPT,
-      });
-
-      formattedReq.push({
-        type: 'text',
-        text: `###{${jobDescription}}###`,
-      });
+      const formattedReq = [
+        {
+          type: 'text',
+          text: GENERATE_COVER_LETTER_USER_PROMPT,
+        },
+        {
+          type: 'text',
+          text: `resume: %%%{${resumeText}}%%%`,
+        },
+        {
+          type: 'text',
+          text: `job description: ###{${jobDescription}}###`,
+        },
+      ];
 
       const response = await this.openai.chat.completions.create({
-        model: 'gpt-4o',
+        model: 'anthropic.claude-3-5-sonnet-20240620-v1:0',
         temperature: 0.3,
         messages: [
           {
@@ -108,7 +121,7 @@ export class OpenAIService {
           },
           {
             role: 'user',
-            content: formattedReq,
+            content: formattedReq as ChatCompletionContentPartText[],
           },
         ],
         stream: true,

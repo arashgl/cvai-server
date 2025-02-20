@@ -1,0 +1,27 @@
+{
+    "name": "python-ocr",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "apps/python-ocr",
+    "projectType": "application",
+    "targets": {
+        "build": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "docker build -t python-ocr -f apps/python-ocr/Dockerfile ."
+            }
+        },
+        "serve": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "python apps/python-ocr/main.py"
+            }
+        },
+        "lint": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "black apps/python-ocr"
+            }
+        }
+    },
+    "tags": []
+}

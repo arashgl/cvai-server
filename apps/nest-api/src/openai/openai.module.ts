@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { OpenAI } from 'openai';
 import { OpenAIService } from './openai.service';
-import { UtilsModule } from 'src/utils/utils.module';
+import { UtilsModule } from '../utils/utils.module';
 
 @Module({
   imports: [UtilsModule],
