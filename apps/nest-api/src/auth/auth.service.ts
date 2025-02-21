@@ -98,7 +98,6 @@ export class AuthService {
       // Update Google ID if not set
       if (!user.googleId) {
         user.googleId = details.googleId;
-        user.password = 'Unknown';
         await this.userRepository.save(user);
       }
       return user;
@@ -109,6 +108,7 @@ export class AuthService {
       email: details.email,
       googleId: details.googleId,
       isEmailVerified: true, // Google OAuth emails are verified
+      password: 'Unknown',
     });
 
     await this.userRepository.save(newUser);
