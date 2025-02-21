@@ -9,12 +9,14 @@ import { OpenAIModule } from './openai/openai.module';
 import { CoverLetterModule } from './cover-letter/cover-letter.module';
 import { AnalyzeModule } from './analyze/analyze.module';
 import { DatabaseModule } from '@lib/shared/database/database.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    UserModule,
     DatabaseModule,
     AuthModule,
     OpenAIModule,

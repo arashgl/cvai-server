@@ -8,14 +8,23 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from '@lib/shared/database/entities/user.entity';
+import { Response } from 'express';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
+  clientURL: string;
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private jwtService: JwtService,
-  ) {}
+    configService: ConfigService,
+  ) {
+    this.clientURL = configService.getOrThrow('CLIENT_URL');
+    if (!this.clientURL.endsWith('/')) {
+      this.clientURL += '/';
+    }
+  }
 
   async register(createUserDto: {
     email: string;
@@ -46,7 +55,16 @@ export class AuthService {
   }
 
   async login(email: string, password: string) {
-    const user = await this.userRepository.findOne({ where: { email } });
+    const user = await this.userRepository.findOne({
+      where: { email },
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        password: true,
+      },
+    });
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
@@ -59,7 +77,7 @@ export class AuthService {
     return this.genPayload(user);
   }
 
-  async genPayload(user: User) {
+  genPayload(user: User) {
     const payload = { sub: user.id, email: user.email };
     return {
       token: this.jwtService.sign(payload),
@@ -76,7 +94,6 @@ export class AuthService {
     const user = await this.userRepository.findOne({
       where: { email: details.email },
     });
-
     if (user) {
       // Update Google ID if not set
       if (!user.googleId) {
@@ -97,18 +114,17 @@ export class AuthService {
     return newUser;
   }
 
-  async googleLogin(user: User) {
-    if (!user) {
+  async googleLogin(googleUser: User, res: Response) {
+    if (!googleUser) {
       throw new UnauthorizedException();
     }
 
-    const payload = { sub: user.id, email: user.email };
-    return {
-      token: this.jwtService.sign(payload),
-      user: {
-        id: user.id,
-        email: user.email,
-      },
-    };
+    const user = await this.validateGoogleUser({
+      email: googleUser.email,
+      googleId: googleUser.googleId,
+    });
+
+    const { token } = this.genPayload(user);
+    res.redirect(this.clientURL + `auth/login?token=${token}`);
   }
 }

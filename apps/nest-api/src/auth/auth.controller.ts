@@ -1,9 +1,19 @@
-import { Body, Controller, Post, Get, UseGuards, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Get,
+  UseGuards,
+  Req,
+  Res,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
 import { AuthGuard } from '@nestjs/passport';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { User } from '@lib/shared/database/entities/user.entity';
+import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 
 @Controller('auth')
 @Public()
@@ -11,20 +21,12 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  register(
-    @Body()
-    createUserDto: {
-      email: string;
-      password: string;
-      firstName: string;
-      lastName: string;
-    },
-  ) {
+  register(@Body() createUserDto: RegisterDto) {
     return this.authService.register(createUserDto);
   }
 
   @Post('login')
-  login(@Body() loginDto: { email: string; password: string }) {
+  login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto.email, loginDto.password);
   }
 
@@ -36,7 +38,7 @@ export class AuthController {
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
-  async googleAuthRedirect(@Req() req: Request) {
-    return this.authService.googleLogin(req.user as User);
+  async googleAuthRedirect(@Req() req: Request, @Res() res: Response) {
+    return this.authService.googleLogin(req.user as User, res);
   }
 }

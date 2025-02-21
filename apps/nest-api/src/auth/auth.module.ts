@@ -15,9 +15,9 @@ import { DatabaseModule } from '@lib/shared/database/database.module';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        secret: configService.get('JWT_SECRET'),
+        secret: configService.getOrThrow('JWT_SECRET'),
         signOptions: {
-          expiresIn: configService.get('JWT_EXPIRATION'),
+          expiresIn: configService.getOrThrow('JWT_EXPIRATION'),
         },
       }),
       inject: [ConfigService],

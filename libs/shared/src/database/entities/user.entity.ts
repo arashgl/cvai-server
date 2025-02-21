@@ -21,7 +21,7 @@ export class User extends AppBaseEntity {
   @Column({ nullable: true })
   lastName?: string;
 
-  @Column()
+  @Column({ select: false })
   @Exclude()
   password: string;
 
