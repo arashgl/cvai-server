@@ -23,17 +23,17 @@ services:
     ports:
       - '8000:8000'
 
-  postgres:
-    image: postgres:latest
-    container_name: resume_analyze_db
-    environment:
-      POSTGRES_USER: ${DB_USER:-resume_admin}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-resume_secure_pass_2024}
-      POSTGRES_DB: ${DB_NAME:-resume_analyze_db}
-    ports:
-      - '${DB_PORT:-5531}:5432'
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+  # postgres:
+  #   image: postgres:latest
+  #   container_name: resume_analyze_db
+  #   environment:
+  #     POSTGRES_USER: ${DB_USER:-resume_admin}
+  #     POSTGRES_PASSWORD: ${DB_PASSWORD:-resume_secure_pass_2024}
+  #     POSTGRES_DB: ${DB_NAME:-resume_analyze_db}
+  #   ports:
+  #     - '${DB_PORT:-5531}:5432'
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
 
 volumes:
   postgres_data:
