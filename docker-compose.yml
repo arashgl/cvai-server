@@ -24,6 +24,8 @@ services:
       - PYTHONUNBUFFERED=1
     ports:
       - '8000:8000'
+    networks:
+      - database-network
 
   postgres:
     image: postgres:latest

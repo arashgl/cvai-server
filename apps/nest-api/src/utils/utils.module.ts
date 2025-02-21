@@ -1,11 +1,15 @@
 import { Module } from '@nestjs/common';
 import { UtilsService } from './utils.service';
 import { HttpModule } from '@nestjs/axios';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    HttpModule.register({
-      baseURL: 'http://localhost:8000',
+    HttpModule.registerAsync({
+      useFactory: (configService: ConfigService) => ({
+        baseURL: configService.getOrThrow('PYTHON_OCR_URL'),
+      }),
+      inject: [ConfigService],
     }),
   ],
   providers: [UtilsService],
