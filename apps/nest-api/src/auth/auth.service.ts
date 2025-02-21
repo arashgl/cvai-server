@@ -98,6 +98,7 @@ export class AuthService {
       // Update Google ID if not set
       if (!user.googleId) {
         user.googleId = details.googleId;
+        user.password = 'Unknown';
         await this.userRepository.save(user);
       }
       return user;
