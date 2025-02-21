@@ -10,7 +10,6 @@ services:
       - '${PORT:-3000}:${PORT:-3000}'
     depends_on:
       - python-ocr
-      - postgres
 
   python-ocr:
     build:
@@ -34,6 +33,5 @@ services:
   #     - '${DB_PORT:-5531}:5432'
   #   volumes:
   #     - postgres_data:/var/lib/postgresql/data
-
-volumes:
-  postgres_data:
+# volumes:
+#   postgres_data:
