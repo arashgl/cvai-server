@@ -11,6 +11,8 @@ services:
     depends_on:
       - python-ocr
       - postgres
+    networks:
+      - database-network
 
   python-ocr:
     build:
@@ -34,6 +36,12 @@ services:
       - '${DB_PORT:-5531}:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - database-network # Add this
 
 volumes:
   postgres_data:
+
+networks:
+  database-network:
+    driver: bridge
