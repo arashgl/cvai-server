@@ -11,8 +11,8 @@ import { UtilsModule } from '../utils/utils.module';
       provide: OpenAI,
       useFactory: (configService: ConfigService) => {
         return new OpenAI({
-          baseURL: configService.getOrThrow('AVALAI_URL'),
-          apiKey: configService.getOrThrow('AVALAI_API_KEY'),
+          baseURL: configService.getOrThrow('OPENROUTER_URL'),
+          apiKey: configService.getOrThrow('OPENROUTER_API_KEY'),
         });
       },
       inject: [ConfigService],

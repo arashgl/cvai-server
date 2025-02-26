@@ -24,10 +24,10 @@
     "docker:up": "docker-compose up --build",
     "docker:down": "docker-compose down",
     "docker:logs": "docker-compose logs -f",
-    "affected:build": "nx affected:build",
-    "affected:test": "nx affected:test",
-    "affected:lint": "nx affected:lint",
-    "graph": "nx graph"
+    "affected:build": "bun nx affected:build",
+    "affected:test": "bun nx affected:test",
+    "affected:lint": "bun nx affected:lint",
+    "graph": "bun nx graph"
   },
   "dependencies": {
     "@nestjs/axios": "^4.0.0",
@@ -128,5 +128,5 @@
       "^src/(.*)$": "<rootDir>/apps/nest-api/src/$1"
     }
   },
-  "packageManager": "pnpm@9.15.2+sha512.93e57b0126f0df74ce6bff29680394c0ba54ec47246b9cf321f0121d8d9bb03f750a705f24edc3c1180853afd7c2c3b94196d0a3d53d3e069d9e2793ef11f321"
+  "packageManager": "bun@1.0.26"
 }
