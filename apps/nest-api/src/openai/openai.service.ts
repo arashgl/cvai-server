@@ -22,7 +22,7 @@ export class OpenAIService {
       ];
       const response = await this.openai.chat.completions.create({
         // model: 'gemini-2.0-pro-exp-02-05',
-        model: 'google/gemini-2.0-pro-exp-02-05:free',
+        model: 'google/gemini-2.0-flash-001',
         response_format: { type: 'json_object' },
         temperature: 0.3,
         messages: [
@@ -73,7 +73,7 @@ export class OpenAIService {
 
       const response = await this.openai.chat.completions.create({
         // model: 'gemini-2.0-pro-exp-02-05',
-        model: 'google/gemini-2.0-pro-exp-02-05:free',
+        model: 'google/gemini-2.0-flash-001',
         response_format: { type: 'json_object' },
         temperature: 0.3,
         messages: [

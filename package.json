@@ -24,10 +24,10 @@
     "docker:up": "docker-compose up --build",
     "docker:down": "docker-compose down",
     "docker:logs": "docker-compose logs -f",
-    "affected:build": "bun nx affected:build",
-    "affected:test": "bun nx affected:test",
-    "affected:lint": "bun nx affected:lint",
-    "graph": "bun nx graph"
+    "affected:build": "nx affected:build",
+    "affected:test": "nx affected:test",
+    "affected:lint": "nx affected:lint",
+    "graph": "nx graph"
   },
   "dependencies": {
     "@nestjs/axios": "^4.0.0",
